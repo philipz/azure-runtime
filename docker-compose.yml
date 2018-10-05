@@ -1,0 +1,16 @@
+
+# https://github.com/Azure/azure-functions-core-tools#getting-started-on-kubernetes
+# https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local#create-func
+
+version: "2"
+services:
+
+  func:
+    build: ./func-in-docker
+    volumes:
+    - ./:/workspace
+    # let's exec in for now to do stuff
+    command:
+    - tail
+    - -f
+    - /dev/null
