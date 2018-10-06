@@ -10,6 +10,9 @@ services:
     volumes:
     - ./:/workspace
     # let's exec in for now to do stuff
+    ports:
+    - 7071:7071
+    - 8080:8080
     command:
     - tail
     - -f
