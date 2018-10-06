@@ -1,7 +1,4 @@
 
-# https://github.com/Azure/azure-functions-core-tools#getting-started-on-kubernetes
-# https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local#create-func
-
 version: "2"
 services:
 
@@ -9,11 +6,17 @@ services:
     build: ./func-in-docker
     volumes:
     - ./:/workspace
-    # let's exec in for now to do stuff
+    working_dir: /workspace
     ports:
     - 7071:7071
     - 8080:8080
+    - 8081:8081
     command:
-    - tail
-    - -f
-    - /dev/null
+    - bash
+    - -cex
+    - |
+      mkdir /tmp/sample;
+      cd /tmp/sample;
+      func init --worker-runtime=node TestRuntime;
+      func new --name MyHttpTrigger --template "HTTP trigger";
+      func host start --build --port=8081;
