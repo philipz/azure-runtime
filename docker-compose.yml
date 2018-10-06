@@ -19,4 +19,5 @@ services:
       cd /tmp/sample;
       func init --worker-runtime=node TestRuntime;
       func new --name MyHttpTrigger --template "HTTP trigger";
+      sed -i 's/"authLevel": "function"/"authLevel": "anonymous"/' MyHttpTrigger/function.json
       func host start --build --port=8081;
