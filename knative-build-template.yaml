@@ -14,9 +14,6 @@ spec:
   - name: DIRECTORY
     description: The subdirectory of the workspace/repo
     default: .
-  - name: FUNCTION_NAME
-    description: The name of the exported function to put in the runtime (empty to use package.json)
-    default: ""
   - name: SKIP_TLS_VERIFY
     description: Skip registry TLS verification at push
     default: "false"
@@ -29,21 +26,14 @@ spec:
     - -c
     - |
       cd /workspace/${DIRECTORY}
-      echo "FROM projectriff/node-function-invoker:0.0.9-snapshot" > Dockerfile
-      if [ -z "${FUNCTION_NAME}" ]; then
+      [ -f "Dockerfile" ] && echo "Dockerfile found (from init --docker presumably)" && exit 0
+      # TBD how to handle npm ci (see nodejs-runtime)
       cat <<EOF >> Dockerfile
-      ENV FUNCTION_URI=/functions/
-      COPY package-lock.json \${FUNCTION_URI}package-lock.json
-      COPY package.json \${FUNCTION_URI}package.json
-      RUN (cd \${FUNCTION_URI} && npm ci)
-      COPY . \${FUNCTION_URI}
+      FROM mcr.microsoft.com/azure-functions/node:2.0
+      ENV AzureWebJobsScriptRoot=/home/site/wwwroot
+      COPY . /home/site/wwwroot
+      ENV ASPNETCORE_URLS=http://+:8080
       EOF
-      else
-      cat <<EOF >> Dockerfile
-      ENV FUNCTION_URI=/functions/${FUNCTION_NAME}
-      COPY ${FUNCTION_NAME} \${FUNCTION_URI}
-      EOF
-      fi
       pwd
       ls -l
       cat Dockerfile
