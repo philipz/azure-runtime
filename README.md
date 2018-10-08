@@ -1,3 +1,9 @@
+# Running Azure Functions in Knative
+
+This sample is for [JavaScript](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-node)
+as function language.
+Any of Azure's worker runtimes is likely supported,
+by simply switching the default port from 7071 to 8080.
 
 ## func CLI in docker
 
