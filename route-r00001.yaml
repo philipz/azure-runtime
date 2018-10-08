@@ -1,0 +1,8 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: azure-runtime-example-function
+spec:
+  traffic:
+  - revisionName: azure-runtime-example-function-00002
+    percent: 100

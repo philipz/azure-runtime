@@ -33,3 +33,18 @@ docker logs azure
 curl -v http://localhost:8080/api/MyHttpTrigger?name=test1
 docker kill azure
 ```
+
+## Testing with Knative
+
+Please see https://github.com/triggermesh/nodejs-runtime for actual instructions. In brief, with appropriate waits and status checks inbetween:
+
+```
+kubectl apply -f build-r00001.yaml
+
+kubectl apply -f route-r00001.yaml
+
+kubectl run -i -t knative-test-client --image=gcr.io/cloud-builders/curl --restart=Never --rm -- \
+  --connect-timeout 3 --retry 10 -vSL -w '\n' \
+  -H 'Host: azure-runtime-example-function.default.example.com' \
+  http://knative-ingressgateway.istio-system.svc.cluster.local/api/MyHttpTrigger?name=Hi%20Knative
+```
