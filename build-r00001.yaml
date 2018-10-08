@@ -1,0 +1,29 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Configuration
+metadata:
+  name: azure-runtime-example-function
+  namespace: default
+spec:
+  build:
+    serviceAccountName: knative-build
+    source:
+      git:
+        url: https://github.com/triggermesh/azure-runtime.git
+        revision: master
+    template:
+      name: azure-runtime
+      arguments:
+      - name: DIRECTORY
+        value: ./MyFunctionProj
+      - name: IMAGE
+        value: knative-local-registry:5000/runtime-examples/azure-function1
+  revisionTemplate:
+    spec:
+      container:
+        image: knative-local-registry:5000/runtime-examples/azure-function1
+        env:
+        - name: SALT
+          value: Salt01
+    metadata:
+      labels:
+        knative.dev/type: "function"
