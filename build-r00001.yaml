@@ -22,8 +22,8 @@ spec:
       container:
         image: knative-local-registry:5000/runtime-examples/azure-function1
         env:
-        - name: SALT
-          value: Salt01
+        - name: DUMMY
+          value: v1
     metadata:
       labels:
         knative.dev/type: "function"
