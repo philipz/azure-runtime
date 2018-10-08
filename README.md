@@ -2,8 +2,11 @@
 
 This sample is for [JavaScript](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-node)
 as function language.
-Any of Azure's worker runtimes is likely supported,
-by simply switching the default port from 7071 to 8080.
+
+Any of Azure's worker runtimes is likely supported.
+To add one,
+update the build template with Dockerfile content from `func init --docker`.
+Add env to switch to port 8080.
 
 ## func CLI in docker
 
