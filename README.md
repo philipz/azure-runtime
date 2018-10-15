@@ -57,3 +57,11 @@ kubectl run -i -t knative-test-client --image=gcr.io/cloud-builders/curl --resta
   -H 'Host: azure-runtime-example-function.default.example.com' \
   http://knative-ingressgateway.istio-system.svc.cluster.local/api/MyHttpTrigger?name=Hi%20Knative
 ```
+
+## Support
+
+We would love your feedback on this project so don't hesitate to let us know what is wrong and how we could improve it, just file an [issue](https://github.com/triggermesh/azure-runtime/issues/new)
+
+## Code of Conduct
+
+This work is by no means part of [CNCF](https://www.cncf.io/) but we abide by its [code of conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md)
