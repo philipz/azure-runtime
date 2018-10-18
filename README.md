@@ -35,11 +35,10 @@ func host start --build --port=8080;
 Test case:
 
 ```
-docker build -t azure-runtime MyFunctionProj/
+docker build -t azure-runtime MyFunctionProjWithDockerfile/
 docker run --rm --name azure -p 8080:8080 -d azure-runtime
-sleep 3
 docker logs azure
-curl -v http://localhost:8080/api/MyHttpTrigger?name=test1
+curl -w '\n' http://localhost:8080/api/MyHttpTrigger?name=alice
 docker kill azure
 ```
 
