@@ -22,12 +22,18 @@ docker run --rm --name azurefunc -w /workspace -v $(pwd):/workspace -p 7071:7071
 The following can run as entrypoint command to [launch](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-azure-function-azure-cli#run-the-function-locally) a function from scratch:
 
 ```
-mkdir /tmp/sample;
-cd /tmp/sample;
-func init --worker-runtime=node TestRuntime;
-func new --name MyHttpTrigger --template "HTTP trigger";
-sed -i 's/"authLevel": "function"/"authLevel": "anonymous"/'; MyHttpTrigger/function.json;
-func host start --build --port=8080;
+mkdir /tmp/functions
+cd /tmp/functions
+func init --worker-runtime=node TestRuntime
+func new --name foo --template "HTTP trigger"
+sed -i 's/"authLevel": "function"/"authLevel": "anonymous"/' foo/function.json
+func host start --build --port=8080
+```
+
+On another terminal do:
+
+```
+curl -w '\n\' http://localhost:8080/api/foo?name=alice
 ```
 
 ## Prod build
