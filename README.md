@@ -1,16 +1,11 @@
 # Running Azure Functions in Knative
 
-Azure functions are one of the serverless offerings available to users. Perhaps unknown to most people is that the runtime of Azure functions is available to build and test functions locally. It has also been [documented](https://medium.com/@asavaritayal/azure-functions-on-kubernetes-75486225dac0) that Azure functions could run in Kubernetes.
+Azure functions are one of the serverless offerings available to users. Perhaps little known is that Azure functions can be easily packaged as Docker containers and that a tool called `func` is available to build and test functions locally. It has also been [documented](https://medium.com/@asavaritayal/azure-functions-on-kubernetes-75486225dac0) that Azure functions can easily run in Kubernetes since they can be packaged as containers.
 
 This repository is a step by step tutorial to show you how to run functions that use the Azure function runtime in [knative](https://github.com/knative/docs).
 
 This sample is for [JavaScript](https://docs.microsoft.com/en-us/azure/azure-functions/functions-reference-node)
 as function language.
-
-Any of Azure's worker runtimes is likely supported.
-To add one,
-update the build template with Dockerfile content from `func init --docker`.
-Add env to switch to port 8080.
 
 ## Pre-requisites
 
@@ -53,10 +48,10 @@ The following commands shows you the step by step process to [start](https://doc
 ```
 mkdir /tmp/functions
 cd /tmp/functions
-func init --worker-runtime=node foobar
+func init --worker-runtime=node
 func new --name foobar --template "HTTP trigger"
 sed -i 's/"authLevel": "function"/"authLevel": "anonymous"/' foobar/function.json
-func host start --build --port=8080
+func start --port=8080
 
                   %%%%%%
                  %%%%%%
@@ -89,12 +84,27 @@ If you reach this point you have successfully built a node.js function with the 
 
 ## Preparing a Docker image
 
-Test case:
+The simplest is to package your function within the `azure-func` Docker image with a Dockerfile like this:
 
 ```
-docker build -t azure-function MyFunctionProjWithDockerfile/
-docker run --rm --name azure -p 8080:8080 -d azure-function
-docker logs azure
+FROM gcr.io/triggermesh/azure-func
+RUN mkdir /funcroot
+COPY . /funcroot
+WORKDIR /funcroot
+CMD ["func", "start", "--port", "8080"]
+```
+
+Build the image and run the container
+
+```
+docker build -t myfunc .
+docker run -d -p 8080:8080 myfunc
+```
+
+You can now check the logs 
+
+```
+docker logs -f myfunc
 ```
 
 You are then ready to call the function.
@@ -136,6 +146,12 @@ kubectl run -it curl --image=gcr.io/cloud-builders/curl --restart=Never --rm -- 
 ```
 
 Enjoy !
+
+## Add a runtime
+
+Any of Azure's worker runtimes is likely supported.
+To add one,
+update the build template with Dockerfile content from `func init --docker` and the environment variable `ASPNETCORE_URLS` to set the port to 8080.
 
 ## Support
 
