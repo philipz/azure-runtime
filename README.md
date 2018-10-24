@@ -88,9 +88,9 @@ The simplest is to package your function within the `azure-func` Docker image wi
 
 ```
 FROM gcr.io/triggermesh/azure-func
-RUN mkdir /funcroot
-COPY . /funcroot
-WORKDIR /funcroot
+RUN mkdir /tmp/funcroot
+COPY . /tmp/funcroot
+WORKDIR /tmp/funcroot
 CMD ["func", "start", "--port", "8080"]
 ```
 
