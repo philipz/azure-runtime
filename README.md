@@ -113,6 +113,47 @@ You are then ready to call the function.
 curl -w '\n' http://localhost:8080/api/MyHttpTrigger?name=alice
 ```
 
+## Example: Create a Function with a Queue Trigger
+
+First you need to create a queue on the Azure Queue Storage [service](https://docs.microsoft.com/en-us/azure/storage/queues/storage-dotnet-how-to-use-queues) and make note of your Storage connection string (aka your secret access key).
+
+Let's assume you create a queue called `fooqueue`
+
+Now initialize the function in an empty directory:
+
+```
+func init --worker-runtime=node
+```
+
+And create a new Queue trigger
+
+```
+func new -t "Queue trigger"  --name foobar
+```
+
+Specify your queue name in the file `./foobar/function.json` which was just created.
+
+Now build the function container with the following Dockerfile:
+
+```
+cat Dockerfile 
+FROM gcr.io/triggermesh/azure-func
+RUN mkdir /tmp/funcroot
+COPY . /tmp/funcroot
+WORKDIR /tmp/funcroot
+CMD ["func", "start", "--port", "8080"]
+
+docker build -t myfunc .
+```
+
+And run it, with taking care to pass your connection string as an environment variable:
+
+```
+docker run -it --env AzureWebJobsStorage="...put in your Azure storage connection string ..." myfunc
+```
+
+Publish a message to your queue and watch it being consumed by your function.
+
 ## Deploying Azure Functions in Knative
 
 Please see the TriggerMesh [nodejs runtime](https://github.com/triggermesh/nodejs-runtime) for complete instructions and explanations.
