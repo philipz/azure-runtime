@@ -43,10 +43,12 @@ spec:
       [ -f "Dockerfile" ] && echo "Dockerfile found (from init --docker presumably)" && exit 0
       # TBD how to handle npm ci (see nodejs-runtime)
       cat <<EOF >> Dockerfile
-      FROM mcr.microsoft.com/azure-functions/node:2.0
-      ENV AzureWebJobsScriptRoot=/home/site/wwwroot
-      COPY . /home/site/wwwroot
+      FROM gcr.io/triggermesh/azure-func
+      RUN mkdir /tmp/funcroot
+      COPY . /tmp/funcroot
+      WORKDIR /tmp/funcroot
       ENV ASPNETCORE_URLS=http://+:8080
+      CMD ["func", "start", "--port", "8080"]
       EOF
       pwd
       ls -l
