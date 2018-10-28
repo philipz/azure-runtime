@@ -12,6 +12,8 @@ RUN set -e; \
   apt-get install -y nodejs azure-functions-core-tools; \
   rm -rf /var/lib/apt/lists/* /var/log/apt
 
-RUN groupadd -r func && useradd --no-log-init -r -g func func
+RUN groupadd -r func && useradd -d /home/func --no-log-init -r -g func func
+RUN mkdir /home/func
+RUN chown -R func:func /home/func
 RUN mkdir /.azurefunctions && chown func.func /.azurefunctions
 USER func:func
