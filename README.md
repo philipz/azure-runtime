@@ -136,14 +136,15 @@ Specify your queue name in the file `./foobar/function.json` which was just crea
 Now build the function container with the following Dockerfile:
 
 ```
-cat Dockerfile 
 FROM gcr.io/triggermesh/azure-func
-RUN mkdir /tmp/funcroot
-COPY . /tmp/funcroot
-WORKDIR /tmp/funcroot
+USER root
+COPY . /home/func
+RUN chown -R func:func /home/func
+ENV ASPNETCORE_URLS=http://+:8080
+USER func:func
+WORKDIR /home/func
+RUN func extensions install --package Microsoft.Azure.Storage.Queue --version 9.4.0
 CMD ["func", "start", "--port", "8080"]
-
-docker build -t myfunc .
 ```
 
 And run it, with taking care to pass your connection string as an environment variable:
