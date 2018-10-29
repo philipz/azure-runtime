@@ -44,11 +44,13 @@ spec:
       # TBD how to handle npm ci (see nodejs-runtime)
       cat <<EOF >> Dockerfile
       FROM gcr.io/triggermesh/azure-func
-      RUN mkdir /tmp/funcroot
-      COPY . /tmp/funcroot
-      WORKDIR /tmp/funcroot
+      USER root
+      COPY . /home/func
+      RUN chown -R func:func /home/func
       ENV ASPNETCORE_URLS=http://+:8080
-      CMD ["func", "start", "--port", "8080"]
+      USER func:func
+      WORKDIR /home/func
+      CMD ["func", "start", "--port", "8080"]      
       EOF
       pwd
       ls -l
