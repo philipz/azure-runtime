@@ -13,9 +13,3 @@ RUN set -e; \
   apt-get update; \
   apt-get install -y nodejs azure-functions-core-tools dotnet-sdk-2.2; \
   rm -rf /var/lib/apt/lists/* /var/log/apt
-
-RUN groupadd -r func && useradd -d /home/func --no-log-init -r -g func func
-RUN mkdir /home/func
-RUN chown -R func:func /home/func
-RUN mkdir /.azurefunctions && chown func.func /.azurefunctions
-USER func:func
